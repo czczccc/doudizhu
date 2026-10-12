@@ -1,0 +1,41 @@
+/*
+ * 样式入口：Tailwind + CZ Design System 的 token、主题映射和基础样式。
+ * 设计系统需要和本仓库并排放在 ../cz-design-system。
+ */
+@import "tailwindcss";
+@import "../../cz-design-system/src/styles/tokens.css";
+@import "../../cz-design-system/src/styles/theme.css";
+@import "../../cz-design-system/src/styles/base.css";
+
+@source "../../cz-design-system/src/components";
+@source "./";
+
+/* 牌背：强调色底 + 细斜纹，颜色全部来自语义 token */
+@utility card-back {
+  background-color: var(--cz-color-accent);
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 4px,
+    var(--cz-color-accent-hover) 4px 5px
+  );
+  box-shadow: inset 0 0 0 3px var(--cz-color-accent), inset 0 0 0 4px var(--cz-color-on-accent);
+}
+
+/* 牌面：比卡片更亮一级的底色 */
+@utility card-face {
+  background-color: var(--cz-color-raised);
+  background-image: linear-gradient(180deg, transparent 60%, var(--cz-color-sunken) 100%);
+}
+
+/* 王牌竖排文字 */
+@utility vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: -0.1em;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
