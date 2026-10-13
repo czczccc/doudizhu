@@ -4,20 +4,10 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      # 设计系统以源码形式引用，需要和本仓库并排放置
       - uses: actions/checkout@v4
-        with:
-          path: doudizhu
-      - uses: actions/checkout@v4
-        with:
-          repository: czczccc/cz-design-system
-          path: cz-design-system
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
-          cache-dependency-path: doudizhu/package-lock.json
       - run: npm ci
-        working-directory: doudizhu
       - run: npm run check
-        working-directory: doudizhu

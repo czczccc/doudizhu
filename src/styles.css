@@ -1,13 +1,8 @@
 /*
- * 样式入口：Tailwind + CZ Design System 的 token、主题映射和基础样式。
- * 设计系统需要和本仓库并排放在 ../cz-design-system。
+ * 样式入口：CZ Design System 的样式（含 Tailwind、token、主题映射、基础样式和组件类名扫描）。
  */
-@import "tailwindcss";
-@import "../../cz-design-system/src/styles/tokens.css";
-@import "../../cz-design-system/src/styles/theme.css";
-@import "../../cz-design-system/src/styles/base.css";
+@import "@cz/design-system/styles.css";
 
-@source "../../cz-design-system/src/components";
 @source "./";
 
 /* 牌背：强调色底 + 细斜纹，颜色全部来自语义 token */

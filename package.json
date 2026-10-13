@@ -13,6 +13,7 @@
     "check": "npm run typecheck && npm run test && npm run build"
   },
   "dependencies": {
+    "@cz/design-system": "https://codeload.github.com/czczccc/cz-design-system/tar.gz/61d48daf0b0a63fbbd59146e5008bc844bec7b21",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "framer-motion": "13.4.4",

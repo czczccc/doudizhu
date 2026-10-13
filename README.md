@@ -6,10 +6,7 @@
 
 ## 快速开始
 
-设计系统以源码形式引用，需要和本仓库**并排克隆**：
-
 ```bash
-git clone https://github.com/czczccc/cz-design-system.git
 git clone https://github.com/czczccc/doudizhu.git
 cd doudizhu
 npm ci
@@ -17,13 +14,25 @@ cp .env.example .env   # 可选：填入要用的模型 Key
 npm run dev            # http://localhost:5173
 ```
 
-```
-your-folder/
-  cz-design-system/
-  doudizhu/
+不填任何 Key 也能玩：大模型请求失败时，这一步会由规则 AI 代打，并在侧栏注明原因。
+
+## 部署
+
+```bash
+npm ci
+npm run build
+npm start -- --host 0.0.0.0 --port 8080
 ```
 
-不填任何 Key 也能玩：大模型请求失败时，这一步会由规则 AI 代打，并在侧栏注明原因。
+`npm start`（`vite preview`）同时提供页面和大模型代理 `/api/llm`，所以要以 Node 进程运行，不能只把 `dist/` 放到静态托管上。模型 Key 用环境变量或 `.env` 提供。
+
+注意：代理没有登录校验。服务端配置了 Key 又对公网开放时，任何能访问页面的人都会用你的 Key 调模型。公开部署时建议不在服务端放 Key（让玩家在设置里填自己的），或在前面加一层访问控制。
+
+## 设计系统依赖
+
+CZ Design System 以 npm 依赖的形式引入，指向 GitHub 上某个固定提交的源码包（见 `package.json` 里的 `@cz/design-system`），`npm ci` 会自动下载，不需要单独克隆，构建机也不需要装 git。
+
+升级设计系统：把 URL 末尾的提交号换成新的，再执行 `npm install` 更新锁文件。
 
 ## 接入大模型
 
