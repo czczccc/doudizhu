@@ -63,7 +63,7 @@ const signed = (n: number) => (n > 0 ? `+${n}` : String(n));
 
 export function App() {
   const [theme, setTheme] = useTheme();
-  const [seats, setSeats] = useStoredState<[SeatConfig, SeatConfig]>("ddz-seats", defaultSeats);
+  const [seats, setSeats] = useStoredState<[SeatConfig, SeatConfig]>("ddz-seats-v2", defaultSeats);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [logOpen, setLogOpen] = useState(false);
   const [accessPassword, setAccessPassword] = useStoredState("ddz-access-password", () => "");

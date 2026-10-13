@@ -79,6 +79,14 @@ export const PROVIDERS: Provider[] = [
     keyless: true,
   },
   {
+    id: "sub2api",
+    name: "Sub2API 中转",
+    kind: "openai",
+    baseUrl: "https://sub2api.czczccc.space/v1",
+    envKey: "SUB2API_API_KEY",
+    models: ["deepseek-v4.1-flash", "glm-5.3-flash"],
+  },
+  {
     id: "custom",
     name: "自定义（OpenAI 兼容）",
     kind: "openai",

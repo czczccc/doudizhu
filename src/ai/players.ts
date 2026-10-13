@@ -22,8 +22,8 @@ export type SeatConfig = {
 };
 
 export const defaultSeats = (): [SeatConfig, SeatConfig] => [
-  { kind: "llm", name: "Claude", providerId: "anthropic", model: "claude-opus-5-5", apiKey: "", baseUrl: "", effort: "low" },
-  { kind: "bot", name: "老张", providerId: "deepseek", model: "deepseek-chat", apiKey: "", baseUrl: "", effort: "low" },
+  { kind: "llm", name: "DeepSeek", providerId: "sub2api", model: "deepseek-v4.1-flash", apiKey: "", baseUrl: "", effort: "low" },
+  { kind: "llm", name: "GLM", providerId: "sub2api", model: "glm-5.3-flash", apiKey: "", baseUrl: "", effort: "low" },
 ];
 
 export const modelLabel = (c: SeatConfig) => (c.kind === "bot" ? "规则 AI" : c.model || (providerById(c.providerId)?.name ?? c.providerId));
