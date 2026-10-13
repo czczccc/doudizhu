@@ -88,7 +88,7 @@ function SeatForm({ index, value, onChange }: { index: number; value: SeatConfig
               hint={
                 provider?.envKey
                   ? `留空则使用服务端环境变量 ${provider.envKey}。Key 只保存在本机浏览器。`
-                  : "Key 只保存在本机浏览器，经本地代理转发。"
+                  : "Key 只保存在本机浏览器，经服务端转发。"
               }
             >
               <Input id={id("key")} type="password" autoComplete="off" value={value.apiKey} onChange={(e) => set("apiKey", e.target.value)} />
@@ -116,18 +116,24 @@ export function SettingsDialog({
   open,
   onOpenChange,
   seats,
+  accessPassword,
   onSave,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   seats: [SeatConfig, SeatConfig];
-  onSave: (seats: [SeatConfig, SeatConfig]) => void;
+  accessPassword: string;
+  onSave: (seats: [SeatConfig, SeatConfig], accessPassword: string) => void;
 }) {
   const [draft, setDraft] = useState(seats);
+  const [password, setPassword] = useState(accessPassword);
   const [tab, setTab] = useState("1");
   useEffect(() => {
-    if (open) setDraft(seats);
-  }, [open, seats]);
+    if (open) {
+      setDraft(seats);
+      setPassword(accessPassword);
+    }
+  }, [open, seats, accessPassword]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -154,13 +160,19 @@ export function SettingsDialog({
             </TabsContent>
           ))}
         </Tabs>
+        <Field label="访问密码" htmlFor="access-password" hint="服务器设置了 ACCESS_PASSWORD 时才需要填">
+          <Input id="access-password" type="password" autoComplete="off" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </Field>
         <DialogFooter>
           <Button variant="secondary" onClick={() => onOpenChange(false)}>
             取消
           </Button>
           <Button
             onClick={() => {
-              onSave(draft.map((s) => ({ ...s, name: s.name.trim() || (s.kind === "llm" ? "AI" : "电脑") })) as [SeatConfig, SeatConfig]);
+              onSave(
+                draft.map((s) => ({ ...s, name: s.name.trim() || (s.kind === "llm" ? "AI" : "电脑") })) as [SeatConfig, SeatConfig],
+                password.trim(),
+              );
               onOpenChange(false);
             }}
           >

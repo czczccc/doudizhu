@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
-import { extractJson, parseBid, parsePlay } from "../src/ai/players";
+import { extractJson, parseBid, parsePlay } from "../src/ai/decide";
 import { bidPrompt, playPrompt } from "../src/ai/prompt";
 import type { Card } from "../src/game/cards";
 import { analyze } from "../src/game/patterns";

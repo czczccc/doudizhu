@@ -2,7 +2,7 @@
  * 对局控制：持有游戏状态，轮到对手时调用规则 AI 或大模型，并记录它们的决策过程。
  */
 import { useCallback, useEffect, useRef, useState } from "react";
-import { botDecision, llmDecision, modelLabel, type DecisionLog, type SeatConfig } from "./ai/players";
+import { botDecision, llmDecision, modelLabel, type Decision, type DecisionLog, type SeatConfig } from "./ai/players";
 import type { Card } from "./game/cards";
 import { IllegalAction, applyAction, deal, type Action, type GameState, type Seat } from "./game/state";
 import type { Speech } from "./components/Table";
@@ -30,7 +30,7 @@ function useStored<T>(key: string, initial: T) {
 
 export type Scoreboard = { round: number; scores: [number, number, number] };
 
-export function useGame(configs: [SeatConfig, SeatConfig]) {
+export function useGame(configs: [SeatConfig, SeatConfig], accessPassword = "") {
   const [state, setState] = useState<GameState>(() => deal());
   const [logs, setLogs] = useState<DecisionLog[]>([]);
   const [speech, setSpeech] = useState<Partial<Record<Seat, Speech>>>({});
@@ -38,6 +38,8 @@ export function useGame(configs: [SeatConfig, SeatConfig]) {
   const [board, setBoard] = useStored<Scoreboard>("ddz-scoreboard", { round: 1, scores: [0, 0, 0] });
   const configsRef = useRef(configs);
   configsRef.current = configs;
+  const passwordRef = useRef(accessPassword);
+  passwordRef.current = accessPassword;
   const names: [string, string, string] = ["你", configs[0].name, configs[1].name];
   // 给大模型看的名字：从它的视角，“你”是它自己，真人玩家叫“玩家”
   const namesRef = useRef<[string, string, string]>(["玩家", configs[0].name, configs[1].name]);
@@ -70,7 +72,7 @@ export function useGame(configs: [SeatConfig, SeatConfig]) {
 
     (async () => {
       setThinking(seat);
-      let decision;
+      let decision: Decision;
       if (config.kind === "llm") {
         setLogs((ls) => [
           ...ls,
@@ -84,8 +86,16 @@ export function useGame(configs: [SeatConfig, SeatConfig]) {
             replies: [],
           },
         ]);
-        decision = await llmDecision(state, seat, config, namesRef.current, controller.signal, patchLog);
-        patchLog({ status: decision.note ? "error" : "done", summary: decision.summary, note: decision.note });
+        const result = await llmDecision(state, seat, config, namesRef.current, passwordRef.current, controller.signal);
+        decision = result.decision;
+        patchLog({
+          status: decision.note ? "error" : "done",
+          summary: decision.summary,
+          note: decision.note,
+          prompt: result.prompt,
+          replies: result.replies,
+          ms: result.ms,
+        });
       } else {
         await sleep(600 + Math.random() * 600);
         decision = botDecision(state, seat);

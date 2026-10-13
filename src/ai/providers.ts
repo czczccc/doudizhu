@@ -1,5 +1,5 @@
 /**
- * 大模型服务商。浏览器和本地代理（server/llm-proxy.ts）共用这份配置。
+ * 大模型服务商。浏览器和服务端（server/llm-proxy.ts）共用这份配置。
  *
  * - anthropic：Claude，走官方 SDK
  * - openai：任何 OpenAI 兼容的 /chat/completions 接口（DeepSeek、通义千问、Kimi、智谱、Ollama……）
@@ -91,20 +91,3 @@ export const providerById = (id: string) => PROVIDERS.find((p) => p.id === id);
 
 /** Claude 的思考力度；对局里每一步都要等，默认用 low 保证节奏 */
 export type Effort = "low" | "medium" | "high";
-
-/** 浏览器发给本地代理的请求 */
-export type LlmRequest = {
-  providerId: string;
-  model: string;
-  /** 浏览器里填的 Key；留空则用服务端环境变量 */
-  apiKey?: string;
-  /** 仅“自定义”服务商使用 */
-  baseUrl?: string;
-  effort?: Effort;
-  system: string;
-  messages: { role: "user" | "assistant"; content: string }[];
-  /** 希望模型返回的 JSON 结构（Claude 用结构化输出强制，其他模型写在提示词里） */
-  schema?: Record<string, unknown>;
-};
-
-export type LlmResponse = { ok: true; text: string; ms: number } | { ok: false; error: string; ms: number };

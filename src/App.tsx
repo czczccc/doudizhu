@@ -66,7 +66,8 @@ export function App() {
   const [seats, setSeats] = useStoredState<[SeatConfig, SeatConfig]>("ddz-seats", defaultSeats);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [logOpen, setLogOpen] = useState(false);
-  const game = useGame(seats);
+  const [accessPassword, setAccessPassword] = useStoredState("ddz-access-password", () => "");
+  const game = useGame(seats, accessPassword);
   const { state, names, thinking, speech, board } = game;
 
   const [selected, setSelected] = useState<Set<number>>(new Set());
@@ -314,7 +315,16 @@ export function App() {
         </main>
       </div>
 
-      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} seats={seats} onSave={setSeats} />
+      <SettingsDialog
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+        seats={seats}
+        accessPassword={accessPassword}
+        onSave={(next, password) => {
+          setSeats(next);
+          setAccessPassword(password);
+        }}
+      />
 
       <Dialog open={logOpen} onOpenChange={setLogOpen}>
         <DialogContent className="max-h-full max-w-lg overflow-y-auto p-0">
